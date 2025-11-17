@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const ctx1 = document.getElementById('chart1').getContext('2d');
-    const ctx2 = document.getElementById('chart2').getContext('2d');
+    const ctx = document.getElementById('chart').getContext('2d');
 
-    const data1 = {
+    const data = {
         labels: [],
         datasets: [
             {
@@ -11,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 borderColor: 'blue',
                 fill: false,
                 pointRadius: 0,
-                tension: 0.1
+                tension: 0.1,
+                yAxisID: 'y'
             },
             {
                 label: 'Prędkość omega_zadana [rad/s]',
@@ -20,27 +20,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 fill: false,
                 pointRadius: 0,
                 borderDash: [5, 5],
-                tension: 0.1
+                tension: 0.1,
+                yAxisID: 'y'
             },
-        ]
-    };
-    const data2 = {
-        labels: [],
-        datasets: [
             {
                 label: 'Moment sterujący tau [Nm]',
                 data: [],
                 borderColor: 'green',
                 fill: false,
                 pointRadius: 0,
-                tension: 0.1
+                tension: 0.1,
+                yAxisID: 'y1'
             }
         ]
     };
 
-    const config1 = {
+    const config = {
         type: 'line',
-        data: data1,
+        data: data,
         options: {
             animation: false,
             responsive: true,
@@ -52,39 +49,29 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 },
                 y: {
+                    type: 'linear',
+                    position: 'left',
                     title: {
                         display: true,
-                        text: 'Wartość'
-                    }
-                }
-            }
-        }
-    };
-    const config2 = {
-        type: 'line',
-        data: data2,
-        options: {
-            animation: false,
-            responsive: true,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Czas [s]'
+                        text: 'Prędkość (Omega) [rad/s]'
                     }
                 },
-                y: {
+                y1: {
+                    type: 'linear',
+                    position: 'right',
                     title: {
                         display: true,
-                        text: 'Wartość'
+                        text: 'Moment (Tau) [Nm]'
+                    },
+                    grid: {
+                        drawOnChartArea: false,
                     }
                 }
             }
         }
     };
 
-    const chart1 = new Chart(ctx1, config1);
-    const chart2 = new Chart(ctx2, config2);
+    const chart = new Chart(ctx, config);
 
     const sliders = {
         kp: document.getElementById('kpSlider'),
@@ -93,6 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
         omegaSet: document.getElementById('omegaSetSlider'),
         b: document.getElementById('bSlider'),
         disturbance: document.getElementById('disturbanceSlider'),
+        mass: document.getElementById('massSlider'),
+        radius: document.getElementById('radiusSlider'),
+        maxMoment: document.getElementById('maxMomentSlider'),
     };
     const labels = {
         kp: document.getElementById('kpVal'),
@@ -101,6 +91,15 @@ document.addEventListener("DOMContentLoaded", () => {
         omegaSet: document.getElementById('omegaSetVal'),
         b: document.getElementById('bVal'),
         disturbance: document.getElementById('disturbanceVal'),
+        mass: document.getElementById('massVal'),
+        radius: document.getElementById('radiusVal'),
+        maxMoment: document.getElementById('maxMomentVal'),
+    };
+    const stats = {
+        settlingTime: document.getElementById('settlingTimeStat'),
+        steadyStateError: document.getElementById('steadyStateErrorStat'),
+        integralError: document.getElementById('integralErrorStat'),
+        integralTauAbs: document.getElementById('integralTauAbsStat'),
     };
     const startButton = document.getElementById('startButton');
 
@@ -115,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const ws = new WebSocket(`ws://${window.location.host}/ws`);
 
     ws.onopen = () => {
-        console.log("Połączono z WebSocket.");
         startButton.disabled = false;
         startButton.textContent = "Uruchom Symulację";
     };
@@ -127,15 +125,17 @@ document.addEventListener("DOMContentLoaded", () => {
             if (msg.type === 'simulation_data') {
                     const payload = msg.payload;
 
-                    data1.labels = payload.time;
-                    data1.datasets[0].data = payload.omega;
-                    data1.datasets[1].data = new Array(payload.time.length).fill(payload.omega_set);
+                    stats.settlingTime.innerText = `Settling time: ${payload.stats.settling_time.toFixed(3)} s`;
+                    stats.steadyStateError.innerText = `Steady state error: ${payload.stats.steady_state_error.toFixed(4)}`;
+                    stats.integralError.innerText = `Integral error: ${payload.stats.integral_error.toFixed(3)}`;
+                    stats.integralTauAbs.innerText = `Total effort (Tau): ${payload.stats.integral_tau_abs.toFixed(3)}`;
 
-                    data2.labels = payload.time;
-                    data2.datasets[0].data = payload.tau;
+                    data.labels = payload.time;
+                    data.datasets[0].data = payload.omega;
+                    data.datasets[1].data = new Array(payload.time.length).fill(payload.omega_set);
+                    data.datasets[2].data = payload.tau;
 
-                    chart1.update();
-                    chart2.update();
+                    chart.update();
 
                     console.log("Symulacja zakończona. Otrzymano dane.");
                     startButton.disabled = false;
@@ -149,13 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     ws.onclose = () => {
-        console.log("Rozłączono z WebSocket.");
         startButton.disabled = true;
         startButton.textContent = "Rozłączono";
     };
 
     ws.onerror = (error) => {
-        console.error("Błąd WebSocket:", error);
         startButton.disabled = true;
         startButton.textContent = "Błąd Połączenia";
     };
@@ -169,7 +167,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 Kd: parseFloat(sliders.kd.value),
                 omega_set: parseFloat(sliders.omegaSet.value),
                 b: parseFloat(sliders.b.value),
-                disturbance: parseFloat(sliders.disturbance.value)
+                disturbance: parseFloat(sliders.disturbance.value),
+                mass: parseFloat(sliders.mass.value),
+                radius: parseFloat(sliders.radius.value),
+                maxMoment: parseFloat(sliders.maxMoment.value)
             };
 
             ws.send(JSON.stringify({ 

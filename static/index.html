@@ -51,16 +51,39 @@
 </div>
 
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+    <label for="massSlider" style="width: 200px; margin-right: 10px;">
+        masa: <span id="massVal">0</span> jednostka
+    </label>
+    <input type="range" id="massSlider" min="0" max="20" step="1" value="0" style="flex: 1;">
+</div>
+
+<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+    <label for="radiusSlider" style="width: 200px; margin-right: 10px;">
+        radius: <span id="radiusVal">0</span> jednostka
+    </label>
+    <input type="range" id="radiusSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
+</div>
+
+<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+    <label for="maxMomentSlider" style="width: 200px; margin-right: 10px;">
+        moment: <span id="maxMomentVal">0</span> jednostka
+    </label>
+    <input type="range" id="maxMomentSlider" min="0" max="100" step="1" value="0" style="flex: 1;">
+</div>
+
+<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <button style="width: 800px" id="startButton">Uruchom Symulację</button>
 </div>
 
+<div style="width: 800px; margin: 0 auto; margin-bottom: 20px;">
+    <p id="settlingTimeStat"></p>
+    <p id="steadyStateErrorStat"></p>
+    <p id="integralErrorStat"></p>
+    <p id="integralTauAbsStat"></p>
+</div>
+
 <div style="width: 1200px; margin: 0 auto; margin-bottom: 20px; display: flex">
-    <div style="width: 600px">
-        <canvas id="chart1" width="600" height="400" style="display: block; margin: 0 auto;"></canvas>
-    </div>
-    <div style="width: 600px">
-        <canvas id="chart2" width="600" height="400" style="display: block; margin: 0 auto;"></canvas>
-    </div>
+    <canvas id="chart" width="1200" height="400" style="display: block; margin: 0 auto;"></canvas>
 </div>
 
 <script src="static/script.js"></script>
