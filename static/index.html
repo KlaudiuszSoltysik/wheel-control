@@ -6,8 +6,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
+<!-- Glowny naglowek -->
 <h1 style="text-align: center;">Symulacja Koła w czasie rzeczywistym</h1>
 
+<!-- Suwak Kp -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="kpSlider" style="width: 200px; margin-right: 10px;">
         Kp: <span id="kpVal">0</span>
@@ -15,6 +18,7 @@
     <input type="range" id="kpSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak Ki -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="kiSlider" style="width: 200px; margin-right: 10px;">
         Ki: <span id="kiVal">0</span>
@@ -22,6 +26,7 @@
     <input type="range" id="kiSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak Kd -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="kdSlider" style="width: 200px; margin-right: 10px;">
         Kd: <span id="kdVal">0</span>
@@ -29,6 +34,7 @@
     <input type="range" id="kdSlider" min="0" max="1" step="0.01" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak predkosci zadanej -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="omegaSetSlider" style="width: 200px; margin-right: 10px;">
         Prędkość zadana: <span id="omegaSetVal">0</span> rad/s
@@ -36,6 +42,7 @@
     <input type="range" id="omegaSetSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak wspolczynnika tarcia -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="bSlider" style="width: 200px; margin-right: 10px;">
         b: <span id="bVal">0</span> jednostka
@@ -43,6 +50,7 @@
     <input type="range" id="bSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak zaklocen zewnetrznych-->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="disturbanceSlider" style="width: 200px; margin-right: 10px;">
         disturbance: <span id="disturbanceVal">0</span> jednostka
@@ -50,6 +58,7 @@
     <input type="range" id="disturbanceSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak masy kola -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="massSlider" style="width: 200px; margin-right: 10px;">
         masa: <span id="massVal">0</span> jednostka
@@ -57,6 +66,7 @@
     <input type="range" id="massSlider" min="0" max="20" step="1" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak promienia kola -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="radiusSlider" style="width: 200px; margin-right: 10px;">
         radius: <span id="radiusVal">0</span> jednostka
@@ -64,6 +74,7 @@
     <input type="range" id="radiusSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
 </div>
 
+<!-- Suwak momentu -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <label for="maxMomentSlider" style="width: 200px; margin-right: 10px;">
         moment: <span id="maxMomentVal">0</span> jednostka
@@ -71,10 +82,12 @@
     <input type="range" id="maxMomentSlider" min="0" max="100" step="1" value="0" style="flex: 1;">
 </div>
 
+<!-- Przycisk uruchomienia symulacji -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
     <button style="width: 800px" id="startButton">Uruchom Symulację</button>
 </div>
 
+<!-- Statystyki, ktore sie pokazuja po uruchomieniu symulacji -->
 <div style="width: 800px; margin: 0 auto; margin-bottom: 20px;">
     <p id="settlingTimeStat"></p>
     <p id="steadyStateErrorStat"></p>
@@ -82,10 +95,20 @@
     <p id="integralTauAbsStat"></p>
 </div>
 
+<!-- Canvas = taka kartka papieru dla Chart.js -->
+<!-- Wykres PID -->
+<h2 style="text-align: center;">Wykres regulacji PID</h2>
 <div style="width: 1200px; margin: 0 auto; margin-bottom: 20px; display: flex">
     <canvas id="chart" width="1200" height="400" style="display: block; margin: 0 auto;"></canvas>
 </div>
 
+<!-- Wykres Fuzzy -->
+<h2 style="text-align: center;">Wykres regulacji rozmytej</h2>
+<div style="width: 1200px; margin: 0 auto; margin-bottom: 20px; display: flex">
+    <canvas id="chartFuzzy" width="1200" height="400" style="display: block; margin: 0 auto;"></canvas>
+</div>
+
+<!-- Uruchamiamy .js - bez tego strona bylaby martwa -->
 <script src="static/script.js"></script>
 </body>
 </html>
