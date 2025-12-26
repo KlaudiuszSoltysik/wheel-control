@@ -249,3 +249,5 @@ async def websocket_endpoint(websocket: WebSocket):
 # To run the app, use the command:
 # .\.venv\Scripts\Activate.ps1
 # uvicorn main:app --reload
+
+# DON'T OPEN THIS IN EDGE
