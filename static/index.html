@@ -87,13 +87,20 @@
     <button style="width: 800px" id="startButton">Uruchom Symulację</button>
 </div>
 
-<div style="width: 800px; margin: 0 auto; margin-bottom: 20px;">
-    <p id="steadyStateErrorStat"></p>
-    <p id="steadyStateErrorStatFuzzy"></p>
-    <p id="integralErrorStat"></p>
-    <p id="integralErrorStatFuzzy"></p>
-    <p id="integralTauAbsStat"></p>
-    <p id="integralTauAbsStatFuzzy"></p>
+<div style="width: 800px; margin: 0 auto; margin-bottom: 20px; display: flex; gap: 30px;">
+    <div style="flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 8px;">
+        <h3 style="margin: 0 0 10px 0; text-align: center;">Statystyki PID</h3>
+        <p id="steadyStateErrorStat"></p>
+        <p id="integralErrorStat"></p>
+        <p id="integralTauAbsStat"></p>
+    </div>
+    <div style="flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 8px;">
+        <h3 style="margin: 0 0 10px 0; text-align: center;">Statystyki Fuzzy</h3>
+        <p id="steadyStateErrorStatFuzzy"></p>
+        <p id="integralErrorStatFuzzy"></p>
+        <p id="integralTauAbsStatFuzzy"></p>
+    </div>
+
 </div>
 
 <!-- Canvas = taka kartka papieru dla Chart.js -->

@@ -102,22 +102,22 @@ document.addEventListener("DOMContentLoaded", () => {
             if (type !== 'simulation_data') return;
 
             steadyStateErrorStat.textContent =
-            `Uchyb ustalony PID (koniec symulacji): ${payload.steady_state_error.toFixed(4)}`;
+            `Uchyb ustalony (koniec symulacji): ${payload.steady_state_error.toFixed(4)}`;
 
             steadyStateErrorStatFuzzy.textContent =
-            `Uchyb ustalony Fuzzy (koniec symulacji): ${payload.steady_state_error_fuzzy.toFixed(4)}`;
+            `Uchyb ustalony (koniec symulacji): ${payload.steady_state_error_fuzzy.toFixed(4)}`;
 
             integralErrorStat.textContent =
-            `Całka z |błędu| PID (IAE): ${payload.integral_error.toFixed(4)}`;
+            `Całka z modułu błędu (∫|e(t)|dt)  =  ${payload.integral_error.toFixed(4)}`;
 
             integralErrorStatFuzzy.textContent =
-            `Całka z |błędu| Fuzzy (IAE): ${payload.integral_error_fuzzy.toFixed(4)}`;
+            `Całka z modułu błędu (∫|e(t)|dt)  =  ${payload.integral_error_fuzzy.toFixed(4)}`;
 
             integralTauAbsStat.textContent =
-            `Wysiłek sterowania PID (∫|τ|dt): ${payload.integral_tau_abs.toFixed(4)}`;
+            `Wysiłek sterowania (∫|τ|dt): ${payload.integral_tau_abs.toFixed(4)}`;
 
             integralTauAbsStatFuzzy.textContent =
-            `Wysiłek sterowania Fuzzy (∫|τ|dt): ${payload.integral_tau_abs_fuzzy.toFixed(4)}`;
+            `Wysiłek sterowania (∫|τ|dt): ${payload.integral_tau_abs_fuzzy.toFixed(4)}`;
 
             chart.data.labels = payload.time;
             chart.data.datasets[0].data = payload.omega;

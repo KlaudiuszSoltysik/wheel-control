@@ -175,11 +175,11 @@ async def websocket_endpoint(websocket: WebSocket):
                     integral_tau_abs += abs(tau_clamped) * dt
 
                     # Rownanie dynamiki ukladu - wyliczamy predkosc katowa po zastosowaniu sterowania PID
-                    domega = (tau_clamped - params.get("b", 0.0) * omega - params.get("disturbance", 0.0)) / I   # dw/dt = (tau - b*w - disturbance) / I
-                    omega += domega * dt
+                    domega = (tau_clamped - params.get("b", 0.0) * omega - params.get("disturbance", 0.0)) / I # dw/dt = (tau - b*w - disturbance) / I
+                    omega += domega * dt # w = w(t) + dw/dt * dt
 
                     # Calkowanie bledu bezwzglednego dla PID
-                    integral_error_abs += abs(setpoint - omega) * dt                                                                     # w = w(t) + dw/dt * dt
+                    integral_error_abs += abs(setpoint - omega) * dt                                                                     
 
                     # Zapis danych do wykresu oraz statystyk
                     time += dt       
@@ -206,10 +206,10 @@ async def websocket_endpoint(websocket: WebSocket):
 
                     # Rownanie dynamiki ukladu - wyliczamy predkosc katowa po zastosowaniu sterowania rozmytego
                     domega_fuzzy = (tau_fuzzy - params.get("b", 0.0) * omega_fuzzy - params.get("disturbance", 0.0)) / I # dw/dt = (tau - b*w - disturbance) / I
-                    omega_fuzzy += domega_fuzzy * dt    
+                    omega_fuzzy += domega_fuzzy * dt # w = w(t) + dw/dt * dt
                     
                     # Calkowanie bledu bezwzglednego dla rozmytego
-                    integral_error_abs_fuzzy += abs(setpoint - omega_fuzzy) * dt                                                                 # w = w(t) + dw/dt * dt
+                    integral_error_abs_fuzzy += abs(setpoint - omega_fuzzy) * dt                                                                 
 
                     # Zapis danych do wykresu oraz statystyk rozmytych
                     omega_fuzzy_data.append(omega_fuzzy)
