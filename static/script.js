@@ -77,6 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const steadyStateErrorStatFuzzy = document.getElementById("steadyStateErrorStatFuzzy");
     const integralErrorStat = document.getElementById("integralErrorStat");
     const integralErrorStatFuzzy = document.getElementById("integralErrorStatFuzzy");
+    const integralTauAbsStat = document.getElementById("integralTauAbsStat");
+    const integralTauAbsStatFuzzy = document.getElementById("integralTauAbsStatFuzzy");
 
     // Obsluga zmiany wartosci wszystkich suwakow na raz
     Object.keys(sliders).forEach(key => {
@@ -110,6 +112,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             integralErrorStatFuzzy.textContent =
             `Całka z |błędu| Fuzzy (IAE): ${payload.integral_error_fuzzy.toFixed(4)}`;
+
+            integralTauAbsStat.textContent =
+            `Wysiłek sterowania PID (∫|τ|dt): ${payload.integral_tau_abs.toFixed(4)}`;
+
+            integralTauAbsStatFuzzy.textContent =
+            `Wysiłek sterowania Fuzzy (∫|τ|dt): ${payload.integral_tau_abs_fuzzy.toFixed(4)}`;
 
             chart.data.labels = payload.time;
             chart.data.datasets[0].data = payload.omega;

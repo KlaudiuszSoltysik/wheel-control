@@ -145,6 +145,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Zmienne do statystyk czasowych
                 integral_error_abs = 0.0
                 integral_error_abs_fuzzy = 0.0
+                integral_tau_abs = 0.0
+                integral_tau_abs_fuzzy = 0.0
 
                 # Glowna petla regulacji PID + Fuzzy
                 max_iterations = 5000
@@ -168,6 +170,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
                     # Ograniczanie sterowania do przedzialu [-max_tau, max_tau]
                     tau_clamped = max(-max_tau, min(max_tau, tau_pid))
+
+                    # Calkowanie wartosci bezwzglednej momentu sterujacego
+                    integral_tau_abs += abs(tau_clamped) * dt
 
                     # Rownanie dynamiki ukladu - wyliczamy predkosc katowa po zastosowaniu sterowania PID
                     domega = (tau_clamped - params.get("b", 0.0) * omega - params.get("disturbance", 0.0)) / I   # dw/dt = (tau - b*w - disturbance) / I
@@ -196,6 +201,9 @@ async def websocket_endpoint(websocket: WebSocket):
                     # Ograniczanie sterowania do przedzialu [-max_tau, max_tau]
                     tau_fuzzy = max(-max_tau, min(max_tau, tau_fuzzy))
 
+                    # Calkowanie wartosci bezwzglednej momentu sterujacego rozmytego
+                    integral_tau_abs_fuzzy += abs(tau_fuzzy) * dt
+
                     # Rownanie dynamiki ukladu - wyliczamy predkosc katowa po zastosowaniu sterowania rozmytego
                     domega_fuzzy = (tau_fuzzy - params.get("b", 0.0) * omega_fuzzy - params.get("disturbance", 0.0)) / I # dw/dt = (tau - b*w - disturbance) / I
                     omega_fuzzy += domega_fuzzy * dt    
@@ -207,6 +215,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     omega_fuzzy_data.append(omega_fuzzy)
                     tau_fuzzy_data.append(tau_fuzzy)
 
+                # Obliczenie uchybu ustalonego
                 steady_state_error = setpoint - omega
                 steady_state_error_fuzzy = setpoint - omega_fuzzy
 
@@ -224,7 +233,9 @@ async def websocket_endpoint(websocket: WebSocket):
                             "steady_state_error": steady_state_error,
                             "steady_state_error_fuzzy": steady_state_error_fuzzy,
                             "integral_error": integral_error_abs,
-                            "integral_error_fuzzy": integral_error_abs_fuzzy
+                            "integral_error_fuzzy": integral_error_abs_fuzzy,
+                            "integral_tau_abs": integral_tau_abs,
+                            "integral_tau_abs_fuzzy": integral_tau_abs_fuzzy
                         }
                     })
                 except Exception as e:
