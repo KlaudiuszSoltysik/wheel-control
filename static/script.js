@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const steadyStateErrorStat = document.getElementById("steadyStateErrorStat");
     const steadyStateErrorStatFuzzy = document.getElementById("steadyStateErrorStatFuzzy");
+    const integralErrorStat = document.getElementById("integralErrorStat");
+    const integralErrorStatFuzzy = document.getElementById("integralErrorStatFuzzy");
 
     // Obsluga zmiany wartosci wszystkich suwakow na raz
     Object.keys(sliders).forEach(key => {
@@ -102,6 +104,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             steadyStateErrorStatFuzzy.textContent =
             `Uchyb ustalony Fuzzy (koniec symulacji): ${payload.steady_state_error_fuzzy.toFixed(4)}`;
+
+            integralErrorStat.textContent =
+            `Całka z |błędu| PID (IAE): ${payload.integral_error.toFixed(4)}`;
+
+            integralErrorStatFuzzy.textContent =
+            `Całka z |błędu| Fuzzy (IAE): ${payload.integral_error_fuzzy.toFixed(4)}`;
 
             chart.data.labels = payload.time;
             chart.data.datasets[0].data = payload.omega;
