@@ -73,21 +73,21 @@ document.addEventListener("DOMContentLoaded", () => {
         maxMoment: maxMomentVal
     };
 
-    // Tworzymy elementy do wyswietlania statystyk
-    const stats = {
-        settlingTime: settlingTimeStat,
-        steadyStateError: steadyStateErrorStat,
-        integralError: integralErrorStat,
-        integralTauAbs: integralTauAbsStat
-    };
+    // // Tworzymy elementy do wyswietlania statystyk
+    // const stats = {
+    //     settlingTime: settlingTimeStat,
+    //     steadyStateError: steadyStateErrorStat,
+    //     integralError: integralErrorStat,
+    //     integralTauAbs: integralTauAbsStat
+    // };
 
-    // Tworzymy elementy do wyswietlania statystyk fuzzy
-    const statsFuzzy = {
-        settlingTime: settlingTimeStatFuzzy,
-        steadyStateError: steadyStateErrorStatFuzzy,
-        integralError: integralErrorStatFuzzy,
-        integralTauAbs: integralTauAbsStatFuzzy
-    };
+    // // Tworzymy elementy do wyswietlania statystyk fuzzy
+    // const statsFuzzy = {
+    //     settlingTime: settlingTimeStatFuzzy,
+    //     steadyStateError: steadyStateErrorStatFuzzy,
+    //     integralError: integralErrorStatFuzzy,
+    //     integralTauAbs: integralTauAbsStatFuzzy
+    // };
 
     // Obsluga zmiany wartosci wszystkich suwakow na raz
     Object.keys(sliders).forEach(key => {
@@ -110,15 +110,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const { type, payload } = JSON.parse(data);
             if (type !== 'simulation_data') return;
 
-            stats.settlingTime.innerText = `Settling time: ${payload.stats.settling_time.toFixed(3)} s`;
-            stats.steadyStateError.innerText = `Steady state error: ${payload.stats.steady_state_error.toFixed(4)}`;
-            stats.integralError.innerText = `Integral error: ${payload.stats.integral_error.toFixed(3)}`;
-            stats.integralTauAbs.innerText = `Total effort (Tau): ${payload.stats.integral_tau_abs.toFixed(3)}`;
+            // stats.settlingTime.innerText = `Settling time: ${payload.stats.settling_time.toFixed(3)} s`;
+            // stats.steadyStateError.innerText = `Steady state error: ${payload.stats.steady_state_error.toFixed(4)}`;
+            // stats.integralError.innerText = `Integral error: ${payload.stats.integral_error.toFixed(3)}`;
+            // stats.integralTauAbs.innerText = `Total effort (Tau): ${payload.stats.integral_tau_abs.toFixed(3)}`;
 
-            statsFuzzy.settlingTime.innerText = `Settling time (Fuzzy): ${payload.stats_fuzzy.settling_time.toFixed(3)} s`;
-            statsFuzzy.steadyStateError.innerText = `Steady state error (Fuzzy): ${payload.stats_fuzzy.steady_state_error.toFixed(4)}`;
-            statsFuzzy.integralError.innerText = `Integral error (Fuzzy): ${payload.stats_fuzzy.integral_error.toFixed(3)}`;
-            statsFuzzy.integralTauAbs.innerText = `Total effort (Tau Fuzzy): ${payload.stats_fuzzy.integral_tau_abs.toFixed(3)}`;
+            // statsFuzzy.settlingTime.innerText = `Settling time (Fuzzy): ${payload.stats_fuzzy.settling_time.toFixed(3)} s`;
+            // statsFuzzy.steadyStateError.innerText = `Steady state error (Fuzzy): ${payload.stats_fuzzy.steady_state_error.toFixed(4)}`;
+            // statsFuzzy.integralError.innerText = `Integral error (Fuzzy): ${payload.stats_fuzzy.integral_error.toFixed(3)}`;
+            // statsFuzzy.integralTauAbs.innerText = `Total effort (Tau Fuzzy): ${payload.stats_fuzzy.integral_tau_abs.toFixed(3)}`;
 
             chart.data.labels = payload.time;
             chart.data.datasets[0].data = payload.omega;
@@ -127,9 +127,9 @@ document.addEventListener("DOMContentLoaded", () => {
             chart.update();
 
             chartFuzzy.data.labels = payload.time;
-            chartFuzzy.data.datasets[0].data = payload.omega;
+            chartFuzzy.data.datasets[0].data = payload.omega_fuzzy;
             chartFuzzy.data.datasets[1].data = new Array(payload.time.length).fill(payload.omega_set);
-            chartFuzzy.data.datasets[2].data = payload.tau;
+            chartFuzzy.data.datasets[2].data = payload.tau_fuzzy;
             chartFuzzy.update();
 
             startButton.disabled = false;

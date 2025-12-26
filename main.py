@@ -128,7 +128,6 @@ async def websocket_endpoint(websocket: WebSocket):
                 prev_error = 0.0
                 dt = 0.001
                 time = 0.0
-                integral_error_abs = 0.0
 
                 # Inicjalizacja zmiennych Fuzzy
                 omega_fuzzy = 0.0
@@ -143,22 +142,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 omega_fuzzy_data.append(omega_fuzzy)
                 tau_fuzzy_data.append(0)
 
-                # Ustalenie pasma tolerancji dla czasu ustalania PID
-                tolerance = max(0.01 * abs(setpoint), 0.01)
-                upper_band = setpoint + tolerance
-                lower_band = setpoint - tolerance
-
-                # Zmienne do obliczania czasu ustalania PID
-                time_inside_band = 0.0
-                settling_time_required = 10.0
-                settling_time = -1
-                max_iterations = 120000
-
-                # Zmienne do obliczania czasu ustalania Fuzzy
-                time_inside_band_fuzzy = 0.0
-                settling_time_fuzzy = -1
-
                 # Glowna petla regulacji PID + Fuzzy
+                max_iterations = 5000
                 for _ in range(max_iterations):
                     max_tau = params.get("maxMoment", 0.5)
 
@@ -167,15 +152,14 @@ async def websocket_endpoint(websocket: WebSocket):
                     ###########################################################################################
                     error = setpoint - omega                # obliczenie bledu
                     integral += error * dt                  # czlon calkujacy
-                    integral_error_abs += abs(error) * dt   # calka z |bledu| - miara jakosci regulacji
                     derivative = (error - prev_error) / dt  # czlon rozniczkujacy
                     prev_error = error                      # aktualizacja poprzedniego bledu
 
                     # Obliczanie sterowania PID
                     tau_pid = (
-                        params.get("Kp", 0.0) * error +
-                        params.get("Ki", 0.0) * integral +
-                        params.get("Kd", 0.0) * derivative
+                        params.get("kp", 0.0) * error +
+                        params.get("ki", 0.0) * integral +
+                        params.get("kd", 0.0) * derivative
                     )
 
                     # Ograniczanie sterowania do przedzialu [-max_tau, max_tau]
@@ -184,24 +168,12 @@ async def websocket_endpoint(websocket: WebSocket):
                     # Rownanie dynamiki ukladu - wyliczamy predkosc katowa po zastosowaniu sterowania PID
                     domega = (tau_clamped - params.get("b", 0.0) * omega - params.get("disturbance", 0.0)) / I   # dw/dt = (tau - b*w - disturbance) / I
                     omega += domega * dt                                                                         # w = w(t) + dw/dt * dt
-                    
-                    # Obliczanie czasu ustalania PID
-                    if lower_band <= omega <= upper_band:
-                        time_inside_band += dt
-                        if time_inside_band >= settling_time_required:
-                            settling_time = time - time_inside_band
-                            break
-                    else:
-                        time_inside_band = 0.0
 
                     # Zapis danych do wykresu oraz statystyk
                     time += dt       
                     time_data.append(round(time, 3))
                     omega_data.append(omega)
                     tau_data.append(tau_clamped)
-                    steady_state_error = setpoint - omega_data[-1]
-                    integral_error = integral_error_abs
-                    integral_tau_abs = sum(abs(t) for t in tau_data) * dt
 
                     ###########################################################################################
                     # Regulator rozmyty
@@ -221,21 +193,9 @@ async def websocket_endpoint(websocket: WebSocket):
                     domega_fuzzy = (tau_fuzzy - params.get("b", 0.0) * omega_fuzzy - params.get("disturbance", 0.0)) / I # dw/dt = (tau - b*w - disturbance) / I
                     omega_fuzzy += domega_fuzzy * dt                                                                     # w = w(t) + dw/dt * dt
 
-                    # Obliczanie czasu ustalania rozmytego
-                    if lower_band <= omega_fuzzy <= upper_band:
-                        time_inside_band_fuzzy += dt
-                        if settling_time_fuzzy < 0 and time_inside_band_fuzzy >= settling_time_required:
-                            settling_time_fuzzy = time - time_inside_band_fuzzy
-                            break
-                    else:
-                        time_inside_band_fuzzy = 0.0
-
                     # Zapis danych do wykresu oraz statystyk rozmytych
                     omega_fuzzy_data.append(omega_fuzzy)
                     tau_fuzzy_data.append(tau_fuzzy)
-                    steady_state_error_fuzzy = setpoint - omega_fuzzy_data[-1]
-                    integral_error_fuzzy = sum(abs(setpoint - w) for w in omega_fuzzy_data) * dt
-                    integral_tau_abs_fuzzy = sum(abs(t) for t in tau_fuzzy_data) * dt
 
                 # Wyslanie danych symulacji w formie JSON do klienta
                 try:
@@ -247,19 +207,7 @@ async def websocket_endpoint(websocket: WebSocket):
                             "tau": tau_data,
                             "omega_fuzzy": omega_fuzzy_data,
                             "tau_fuzzy": tau_fuzzy_data,
-                            "omega_set": setpoint,
-                            "stats": {
-                                "settling_time": settling_time,
-                                "steady_state_error": steady_state_error,
-                                "integral_error": integral_error,
-                                "integral_tau_abs": integral_tau_abs
-                            },
-                            "stats_fuzzy": {
-                                "settling_time": settling_time_fuzzy,
-                                "steady_state_error": steady_state_error_fuzzy,
-                                "integral_error": integral_error_fuzzy,
-                                "integral_tau_abs": integral_tau_abs_fuzzy
-                            }
+                            "omega_set": setpoint
                         }
                     })
                 except Exception as e:
