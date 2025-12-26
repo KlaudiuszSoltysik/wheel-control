@@ -110,7 +110,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Parametry symulacji
                 m = params.get("mass", 1.0)
                 r = params.get("radius", 0.5)
-                I = 0.5 * m * r**2
+                I = max(0.5 * m * r**2, 1e-6)
                 setpoint = params.get("omega_set", 0.0)
 
                 # Inicjalizacja list na dane do wykresu PID
