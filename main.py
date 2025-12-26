@@ -197,6 +197,9 @@ async def websocket_endpoint(websocket: WebSocket):
                     omega_fuzzy_data.append(omega_fuzzy)
                     tau_fuzzy_data.append(tau_fuzzy)
 
+                steady_state_error = setpoint - omega
+                steady_state_error_fuzzy = setpoint - omega_fuzzy
+
                 # Wyslanie danych symulacji w formie JSON do klienta
                 try:
                     await websocket.send_json({
@@ -207,7 +210,9 @@ async def websocket_endpoint(websocket: WebSocket):
                             "tau": tau_data,
                             "omega_fuzzy": omega_fuzzy_data,
                             "tau_fuzzy": tau_fuzzy_data,
-                            "omega_set": setpoint
+                            "omega_set": setpoint,
+                            "steady_state_error": steady_state_error,
+                            "steady_state_error_fuzzy": steady_state_error_fuzzy
                         }
                     })
                 except Exception as e:
