@@ -132,6 +132,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Inicjalizacja zmiennych Fuzzy
                 omega_fuzzy = 0.0
                 prev_error_fuzzy = 0.0
+                integral_fuzzy = 0.0
 
                 # Dodanie pierwszego punktu PID (czas 0)
                 time_data.append(time)
@@ -162,11 +163,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     prev_error = error                      # aktualizacja poprzedniego bledu
 
                     # Obliczanie sterowania PID
-                    tau_pid = (
-                        params.get("kp", 0.0) * error +
-                        params.get("ki", 0.0) * integral +
-                        params.get("kd", 0.0) * derivative
-                    )
+                    tau_pid = (params.get("kp", 0.0) * error + params.get("ki", 0.0) * integral + params.get("kd", 0.0) * derivative)
 
                     # Ograniczanie sterowania do przedzialu [-max_tau, max_tau]
                     tau_clamped = max(-max_tau, min(max_tau, tau_pid))
@@ -188,17 +185,32 @@ async def websocket_endpoint(websocket: WebSocket):
                     tau_data.append(tau_clamped)
 
                     ###########################################################################################
-                    # Regulator rozmyty
+                    # Regulator rozmyty Fuzzy-PID
                     ###########################################################################################
-                    e_norm = max(-1, min(1, (setpoint - omega_fuzzy) / (abs(setpoint) + 1e-5))) # normalizacja bledu do przedzialu [-1, 1]
-                    de_norm = e_norm - prev_error_fuzzy                                         # Pochodna bledu
-                    de_norm = max(-1, min(1, de_norm))                                          # normalizacja pochodnej bledu do przedzialu [-1, 1]
-                    prev_error_fuzzy = e_norm                                                   # aktualizacja poprzedniego bledu
+                    # Pobranie nastaw regulatora rozmytego
+                    Ke  = params.get("ke", 1.0)
+                    Kde = params.get("kde", 1.0)
+                    Ku  = params.get("ku", 1.0)
+                    Ki_fuzzy = params.get("ki_fuzzy", 0.0)
 
-                    # Obliczanie sterowania rozmytego
-                    tau_fuzzy = fuzzy_controller(e_norm, de_norm) * max_tau
+                    # Uchyb
+                    e = setpoint - omega_fuzzy
+                    e_norm = Ke * e / (abs(setpoint) + 1e-5)
+                    e_norm = max(-1, min(1, e_norm))
 
-                    # Ograniczanie sterowania do przedzialu [-max_tau, max_tau]
+                    # Zmiana uchybu
+                    de_norm = Kde * (e_norm - prev_error_fuzzy)
+                    de_norm = max(-1, min(1, de_norm))
+                    prev_error_fuzzy = e_norm
+
+                    # Całkowanie uchybu
+                    integral_fuzzy += e_norm * dt
+                    integral_fuzzy = max(-1, min(1, integral_fuzzy))  # anti-windup
+
+                    # Sterowanie fuzzy PID
+                    tau_fuzzy = (Ku * fuzzy_controller(e_norm, de_norm) + Ki_fuzzy * integral_fuzzy) * max_tau
+
+                    # Saturacja
                     tau_fuzzy = max(-max_tau, min(max_tau, tau_fuzzy))
 
                     # Calkowanie wartosci bezwzglednej momentu sterujacego rozmytego

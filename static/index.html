@@ -10,77 +10,124 @@
 <!-- Glowny naglowek -->
 <h1 style="text-align: center;">Symulacja Koła w czasie rzeczywistym</h1>
 
-<!-- Suwak Kp -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="kpSlider" style="width: 200px; margin-right: 10px;">
-        Kp: <span id="kpVal">0</span>
-    </label>
-    <input type="range" id="kpSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
-</div>
+<!-- Nastawy regulatora PID -->
+<h2 style="text-align:center;"> Nastawy regulatora PID </h2>
 
-<!-- Suwak Ki -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="kiSlider" style="width: 200px; margin-right: 10px;">
-        Ki: <span id="kiVal">0</span>
-    </label>
-    <input type="range" id="kiSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
-</div>
+    <!-- Suwak Kp -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="kpSlider" style="width: 270px; margin-right: 10px;">
+            Wzmocnienie proporcjonalne (Kp): <span id="kpVal">0</span>
+        </label>
+        <input type="range" id="kpSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
+    </div>
 
-<!-- Suwak Kd -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="kdSlider" style="width: 200px; margin-right: 10px;">
-        Kd: <span id="kdVal">0</span>
-    </label>
-    <input type="range" id="kdSlider" min="0" max="1" step="0.01" value="0" style="flex: 1;">
-</div>
+    <!-- Suwak Ki -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="kiSlider" style="width: 270px; margin-right: 10px;">
+            Wzmocnienie całkujące (Ki): <span id="kiVal">0</span>
+        </label>
+        <input type="range" id="kiSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
+    </div>
 
-<!-- Suwak predkosci zadanej -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="omegaSetSlider" style="width: 200px; margin-right: 10px;">
-        Prędkość zadana: <span id="omegaSetVal">0</span> rad/s
-    </label>
-    <input type="range" id="omegaSetSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
-</div>
+    <!-- Suwak Kd -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="kdSlider" style="width: 270px; margin-right: 10px;">
+            Wzmocnienie różniczkujące (Kd): <span id="kdVal">0</span>
+        </label>
+        <input type="range" id="kdSlider" min="0" max="1" step="0.01" value="0" style="flex: 1;">
+    </div>
 
-<!-- Suwak wspolczynnika tarcia -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="bSlider" style="width: 200px; margin-right: 10px;">
-        b: <span id="bVal">0</span> jednostka
-    </label>
-    <input type="range" id="bSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
-</div>
+<hr style="width:800px; margin-bottom:20px;">
 
-<!-- Suwak zaklocen zewnetrznych-->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="disturbanceSlider" style="width: 200px; margin-right: 10px;">
-        disturbance: <span id="disturbanceVal">0</span> jednostka
-    </label>
-    <input type="range" id="disturbanceSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
-</div>
+<!-- Nastawy regulatora rozmytego -->
+<h2 style="text-align:center; margin-top:40px;"> Nastawy regulatora rozmytego </h2>
 
-<!-- Suwak masy kola -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="massSlider" style="width: 200px; margin-right: 10px;">
-        masa: <span id="massVal">0</span> jednostka
-    </label>
-    <input type="range" id="massSlider" min="0" max="20" step="1" value="0" style="flex: 1;">
-</div>
+    <!-- Suwak Ke -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label style="width: 270px; margin-right: 10px;">
+            Wzmocnienie uchybu (Ke): <span id="keVal">1</span>
+        </label>
+        <input type="range" id="keSlider" min="0" max="5" step="0.1" value="0" style="flex: 1;">
+    </div>
 
-<!-- Suwak promienia kola -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="radiusSlider" style="width: 200px; margin-right: 10px;">
-        radius: <span id="radiusVal">0</span> jednostka
-    </label>
-    <input type="range" id="radiusSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
-</div>
+    <!-- Suwak Kde -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label style="width: 270px; margin-right: 10px;">
+            Wzmocnienie zmiany uchybu (Kde): <span id="kdeVal">1</span>
+        </label>
+        <input type="range" id="kdeSlider" min="0" max="5" step="0.1" value="0" style="flex: 1;">
+    </div>
 
-<!-- Suwak momentu -->
-<div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
-    <label for="maxMomentSlider" style="width: 200px; margin-right: 10px;">
-        moment: <span id="maxMomentVal">0</span> jednostka
-    </label>
-    <input type="range" id="maxMomentSlider" min="0" max="100" step="1" value="0" style="flex: 1;">
-</div>
+    <!-- Suwak Ku -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label style="width: 270px; margin-right: 10px;">
+            Wzmocnienie wyjścia (Ku): <span id="kuVal">1</span>
+        </label>
+        <input type="range" id="kuSlider" min="0" max="2" step="0.05" value="0" style="flex: 1;">
+    </div>
+
+    <!-- Suwak Ki_fuzzy -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label style="width: 270px; margin-right: 10px;">
+            Wzmocnienie całkowania (Kif): <span id="kiFuzzyVal">0</span>
+        </label>
+        <input type="range" id="kiFuzzySlider" min="0" max="2" step="0.01" value="0" style="flex: 1;">
+    </div>
+
+<hr style="width:800px; margin-bottom:20px;">
+
+<!-- Parametry obiektu i symulacji -->
+<h2 style="text-align:center; margin-top:40px;"> Parametry obiektu i symulacji </h2>
+
+    <!-- Suwak predkosci zadanej -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="omegaSetSlider" style="width: 270px; margin-right: 10px;">
+            Prędkość zadana: <span id="omegaSetVal">0</span> rad/s
+        </label>
+        <input type="range" id="omegaSetSlider" min="0" max="20" step="0.1" value="0" style="flex: 1;">
+    </div>
+
+    <!-- Suwak wspolczynnika tarcia -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="bSlider" style="width: 270px; margin-right: 10px;">
+            Współczynnik tarcia (b): <span id="bVal">0</span> jednostka
+        </label>
+        <input type="range" id="bSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
+    </div>
+
+    <!-- Suwak zaklocen zewnetrznych-->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="disturbanceSlider" style="width: 270px; margin-right: 10px;">
+            Zakłócenia zewnętrzne: <span id="disturbanceVal">0</span> jednostka
+        </label>
+        <input type="range" id="disturbanceSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
+    </div>
+
+    <!-- Suwak masy kola -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="massSlider" style="width: 270px; margin-right: 10px;">
+            Masa koła: <span id="massVal">0</span> jednostka
+        </label>
+        <input type="range" id="massSlider" min="0" max="20" step="1" value="0" style="flex: 1;">
+    </div>
+
+    <!-- Suwak promienia kola -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="radiusSlider" style="width: 270px; margin-right: 10px;">
+            Promień koła: <span id="radiusVal">0</span> jednostka
+        </label>
+        <input type="range" id="radiusSlider" min="0" max="2" step="0.1" value="0" style="flex: 1;">
+    </div>
+
+    <!-- Suwak momentu -->
+    <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
+        <label for="maxMomentSlider" style="width: 270px; margin-right: 10px;">
+            Moment: <span id="maxMomentVal">0</span> jednostka
+        </label>
+        <input type="range" id="maxMomentSlider" min="0" max="100" step="1" value="0" style="flex: 1;">
+    </div>
+
+<hr style="width:800px; margin-bottom:20px;">
 
 <!-- Przycisk uruchomienia symulacji -->
 <div style="width: 800px; margin: 0 auto; display: flex; align-items: center; margin-bottom: 20px;">
