@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    const startButton = document.getElementById("startButton");
+
     // Inicjalizacja chartow Chart.js
     const ctx = document.getElementById('chart').getContext('2d');
     const ctxFuzzy = document.getElementById('chartFuzzy').getContext('2d');
@@ -59,8 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
         omegaSet: omegaSetSlider,
         b: bSlider, 
         disturbance: disturbanceSlider, 
-        mass: massSlider,
-        radius: radiusSlider, 
         maxMoment: maxMomentSlider
     };
 
@@ -76,8 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
         omegaSet: omegaSetVal,
         b: bVal, 
         disturbance: disturbanceVal, 
-        mass: massVal,
-        radius: radiusVal, 
         maxMoment: maxMomentVal
     };
 

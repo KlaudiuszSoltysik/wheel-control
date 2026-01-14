@@ -5,6 +5,9 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import Request
 
+m = 10.0 # masa kola [kg]
+r = 1.0 # promien kola [m]
+
 # Uruchamiamy aplikacje FastAPI
 app = FastAPI()
 
@@ -108,8 +111,6 @@ async def websocket_endpoint(websocket: WebSocket):
                 params = data.get('payload', {})
 
                 # Parametry symulacji
-                m = params.get("mass", 1.0)
-                r = params.get("radius", 0.1)
                 I = max(0.5 * m * r**2, 1e-6)
                 setpoint = params.get("omega_set", 0.0)
 
@@ -126,7 +127,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 omega = 0.0
                 integral = 0.0
                 prev_error = 0.0
-                dt = 0.001
+                dt = 0.01
                 time = 0.0
 
                 # Inicjalizacja zmiennych Fuzzy
