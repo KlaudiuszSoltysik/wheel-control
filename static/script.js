@@ -21,12 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 y: { 
                     type: 'linear', 
                     position: 'left',
-                    title: { display: true, text: 'Prędkość (Omega) [rad/s]' }
+                    title: { display: true, text: 'Prędkość kątowa [rad/s]' }
                 },
                 y1: { 
                     type: 'linear', 
                     position: 'right',
-                    title: { display: true, text: 'Moment (Tau) [Nm]' },
+                    title: { display: true, text: 'Moment sterujący [Nm]' },
                     grid: { drawOnChartArea: false }
                 }
             }
@@ -35,18 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Tworzyymy wykres PID
     const chart = createChart(ctx, [
-        { label: 'Prędkość omega [rad/s]', data: [], borderColor: 'blue', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y' },
-        { label: 'Prędkość omega_zadana [rad/s]', data: [], borderColor: 'red', fill: false, pointRadius: 0, borderDash: [5, 5], tension: 0.1, yAxisID: 'y' }
+        { label: 'Prędkość kątowa [rad/s]', data: [], borderColor: 'blue', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y' },
+        { label: 'Prędkość kątowa zadana [rad/s]', data: [], borderColor: 'red', fill: false, pointRadius: 0, borderDash: [5, 5], tension: 0.1, yAxisID: 'y' }
     ], [
-        { label: 'Moment sterujący tau [Nm]', data: [], borderColor: 'green', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y1' }
+        { label: 'Moment sterujący [Nm]', data: [], borderColor: 'green', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y1' }
     ]);
 
     // Tworzyymy wykres Fuzzy
     const chartFuzzy = createChart(ctxFuzzy, [
-        { label: 'ω_fuzzy [rad/s]', data: [], borderColor: 'purple', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y' },
-        { label: 'Prędkość omega_zadana [rad/s]', data: [], borderColor: 'red', fill: false, pointRadius: 0, borderDash: [5, 5], tension: 0.1, yAxisID: 'y' }
+        { label: 'Prędkość kątowa [rad/s]', data: [], borderColor: 'purple', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y' },
+        { label: 'Prędkość kątowa zadana [rad/s]', data: [], borderColor: 'red', fill: false, pointRadius: 0, borderDash: [5, 5], tension: 0.1, yAxisID: 'y' }
     ], [
-        { label: 'tau_fuzzy [Nm]', data: [], borderColor: 'orange', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y1' }
+        { label: 'Moment sterujący [Nm]', data: [], borderColor: 'orange', fill: false, pointRadius: 0, tension: 0.1, yAxisID: 'y1' }
     ]);
 
     // Tworzymy suwaki
